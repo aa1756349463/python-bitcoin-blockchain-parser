@@ -128,8 +128,14 @@ class Script(object):
             return False
 
         return True
+    
+    def is_bech32(self):
+        if self.value[0] == " ":
+            return True
+        else:
+            return Flase
 
     def is_unknown(self):
         return not self.is_pubkeyhash() and not self.is_pubkey() \
             and not self.is_p2sh() and not self.is_multisig() \
-            and not self.is_return()
+            and not self.is_return() and not self.is_bech32()

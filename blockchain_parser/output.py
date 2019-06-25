@@ -12,6 +12,7 @@
 from .utils import decode_varint, decode_uint64
 from .script import Script
 from .address import Address
+from .segwit_addr import *
 
 
 class Output(object):
@@ -71,6 +72,9 @@ class Output(object):
                 n = self.script.operations[-2]
                 for operation in self.script.operations[1:1+n]:
                     self._addresses.append(Address.from_public_key(operation))
+            elif self.type == "bech32":
+                address = Address(hash = None, public_key = None, address = encode(hrp="bc", witver=0, witprog=bytearray(self.script.hex[2:])),type = "bech32")
+                self._addresses.append(address)
 
         return self._addresses
 
@@ -88,6 +92,9 @@ class Output(object):
 
     def is_multisig(self):
         return self.script.is_multisig()
+    
+    def is_bech32(self):
+        return self.script.is_bech32()
 
     def is_unknown(self):
         return self.script.is_unknown()
@@ -109,5 +116,8 @@ class Output(object):
 
         if self.is_return():
             return "OP_RETURN"
+        
+        if self.is_bech32():
+            return "bech32"
 
         return "unknown"
