@@ -133,7 +133,7 @@ class Script(object):
         if self.value[0] == " ":
             return True
         else:
-            return Flase
+            return False
 
     def is_unknown(self):
         return not self.is_pubkeyhash() and not self.is_pubkey() \
